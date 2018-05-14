@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/wrapper_controls"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ucrop_height_wrapper_controls"
         android:layout_above="@+id/wrapper_states"
-        android:background="@color/ucrop_color_widget_background">
+        android:background="@color/ucrop_color_widget_background"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/layout_aspect_ratio"
@@ -23,13 +25,7 @@
             android:id="@+id/layout_scale_wheel"
             layout="@layout/ucrop_layout_scale_wheel"/>
 
-    </FrameLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ucrop_height_divider_shadow"
-        android:layout_above="@+id/wrapper_states"
-        android:background="@drawable/ucrop_shadow_upside"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/wrapper_states"
@@ -42,8 +38,76 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:id="@+id/state_scale"
             style="@style/ucrop_WrapperIconState">
+
+            <ImageView
+                android:id="@+id/image_view_carousell_rotate"
+                style="@style/ucrop_ImageViewWidgetIcon"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ucrop_ic_rotate"
+                android:tint="#fff"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            style="@style/ucrop_WrapperIconState">
+
+
+            <LinearLayout
+                android:id="@+id/image_view_carousell_replace_wrapper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ucrop_replace_button_background"
+                android:duplicateParentState="true"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingLeft="14dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingRight="14dp">
+
+                <ImageView
+                    android:id="@+id/image_view_carousell_replace"
+                    style="@style/ucrop_ImageViewWidgetIcon"
+                    android:src="@drawable/ucrop_ic_replace"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:tint="#fff"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginStart="6dp"
+                    android:textColor="#fff"
+                    android:text="@string/ucrop_replace"/>
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+        <FrameLayout
+            style="@style/ucrop_WrapperIconState">
+
+            <ImageView
+                android:id="@+id/image_view_carousell_delete"
+                style="@style/ucrop_ImageViewWidgetIcon"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ucrop_ic_delete"/>
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/state_scale"
+            style="@style/ucrop_WrapperIconState"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/image_view_state_scale"
@@ -54,7 +118,8 @@
 
         <FrameLayout
             android:id="@+id/state_aspect_ratio"
-            style="@style/ucrop_WrapperIconState">
+            style="@style/ucrop_WrapperIconState"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/image_view_state_aspect_ratio"
@@ -65,7 +130,8 @@
 
         <FrameLayout
             android:id="@+id/state_rotate"
-            style="@style/ucrop_WrapperIconState">
+            style="@style/ucrop_WrapperIconState"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/image_view_state_rotate"

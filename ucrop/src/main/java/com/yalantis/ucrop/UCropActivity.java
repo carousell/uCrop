@@ -1,8 +1,11 @@
 package com.yalantis.ucrop;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -43,6 +46,11 @@ import com.yalantis.ucrop.view.TransformImageView;
 import com.yalantis.ucrop.view.UCropView;
 import com.yalantis.ucrop.view.widget.AspectRatioTextView;
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.internal.entity.Item;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -56,6 +64,8 @@ import java.util.Locale;
 
 @SuppressWarnings("ConstantConditions")
 public class UCropActivity extends AppCompatActivity {
+
+    private static final int IMAGE_PICKER_REQUEST = 101;
 
     public static final int DEFAULT_COMPRESS_QUALITY = 90;
     public static final Bitmap.CompressFormat DEFAULT_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
@@ -304,6 +314,7 @@ public class UCropActivity extends AppCompatActivity {
             setupRotateWidget();
             setupScaleWidget();
             setupStatesWrapper();
+            setupCarousellControler();
         }
     }
 
@@ -387,6 +398,63 @@ public class UCropActivity extends AppCompatActivity {
         stateAspectRatioImageView.setImageDrawable(new SelectedStateListDrawable(stateAspectRatioImageView.getDrawable(), mActiveWidgetColor));
     }
 
+    private void setupCarousellControler() {
+//        findViewById(R.id.rotate_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getApplicationContext(), "rotate_button", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        findViewById(R.id.replace_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getApplicationContext(), "replace_button", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        findViewById(R.id.remove_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getApplicationContext(), "remove_button", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+        findViewById(R.id.image_view_carousell_rotate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rotateByAngle(90);
+            }
+        });
+
+        findViewById(R.id.image_view_carousell_replace_wrapper).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Matisse.from(UCropActivity.this)
+                        .choose(MimeType.ofAll())
+                        .countable(false)
+                        .maxSelectable(1)
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(0.85f)
+                        .imageEngine(new GlideEngine())
+                        .capture(true)
+                        .selectedImageIds(new ArrayList<String>())
+                        .captureStrategy(new CaptureStrategy(true, getApplicationContext().getPackageName() + ".provider"))
+                        .forResult(IMAGE_PICKER_REQUEST);
+            }
+        });
+
+
+//
+//        ImageView rotateImageView = findViewById(R.id.image_view_carousell_rotate);
+//        ImageView replaceImageView = findViewById(R.id.image_view_carousell_replace);
+//        ImageView deleteImageView = findViewById(R.id.image_view_carousell_delete);
+//
+//        rotateImageView.
+//        super.setColorFilter(mSelectionColor, PorterDuff.Mode.SRC_ATOP);
+//        rotateImageView.setImageDrawable(new SelectedStateListDrawable(rotateImageView.getDrawable(), Color.WHITE));
+//        replaceImageView.setImageDrawable(new SelectedStateListDrawable(replaceImageView.getDrawable(), Color.WHITE));
+//        deleteImageView.setImageDrawable(new SelectedStateListDrawable(deleteImageView.getDrawable(), Color.WHITE));
+    }
+
 
     /**
      * Sets status-bar color for L devices.
@@ -413,26 +481,44 @@ public class UCropActivity extends AppCompatActivity {
             aspectRationSelectedByDefault = 2;
 
             aspectRatioList = new ArrayList<>();
+            aspectRatioList.add(new AspectRatio(null, 2, 1));
+            aspectRatioList.add(new AspectRatio(null, 4, 3));
+//            aspectRatioList.add(new AspectRatio(getString(R.string.ucrop_label_original).toUpperCase(),
+//                    CropImageView.SOURCE_IMAGE_ASPECT_RATIO, CropImageView.SOURCE_IMAGE_ASPECT_RATIO));
             aspectRatioList.add(new AspectRatio(null, 1, 1));
             aspectRatioList.add(new AspectRatio(null, 3, 4));
-            aspectRatioList.add(new AspectRatio(getString(R.string.ucrop_label_original).toUpperCase(),
-                    CropImageView.SOURCE_IMAGE_ASPECT_RATIO, CropImageView.SOURCE_IMAGE_ASPECT_RATIO));
-            aspectRatioList.add(new AspectRatio(null, 3, 2));
-            aspectRatioList.add(new AspectRatio(null, 16, 9));
+            aspectRatioList.add(new AspectRatio(null, 1, 2));
         }
 
         LinearLayout wrapperAspectRatioList = findViewById(R.id.layout_aspect_ratio);
 
-        FrameLayout wrapperAspectRatio;
+        LinearLayout wrapperAspectRatio;
         AspectRatioTextView aspectRatioTextView;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         lp.weight = 1;
+
+        int normal = 50; // 100dp
+
         for (AspectRatio aspectRatio : aspectRatioList) {
-            wrapperAspectRatio = (FrameLayout) getLayoutInflater().inflate(R.layout.ucrop_aspect_ratio, null);
+            wrapperAspectRatio = (LinearLayout) getLayoutInflater().inflate(R.layout.ucrop_aspect_ratio, null);
             wrapperAspectRatio.setLayoutParams(lp);
-            aspectRatioTextView = ((AspectRatioTextView) wrapperAspectRatio.getChildAt(0));
-            aspectRatioTextView.setActiveColor(mActiveWidgetColor);
+            aspectRatioTextView = ((AspectRatioTextView) wrapperAspectRatio.getChildAt(1));
+            aspectRatioTextView.setActiveColor(Color.WHITE);
+            aspectRatioTextView.setTextColor(Color.WHITE);
             aspectRatioTextView.setAspectRatio(aspectRatio);
+
+            float ratio = aspectRatio.getAspectRatioX() / aspectRatio.getAspectRatioY();
+            int width = normal;
+            int height = normal;
+
+            if (ratio > 1) {
+                height = (int) (normal / ratio);
+            } else {
+                width = (int) (normal * ratio);
+            }
+
+            FrameLayout sampleView = ((FrameLayout) wrapperAspectRatio.getChildAt(0));
+            sampleView.setLayoutParams(new LinearLayout.LayoutParams(width, height));
 
             wrapperAspectRatioList.addView(wrapperAspectRatio);
             mCropAspectRatioViews.add(wrapperAspectRatio);
@@ -445,7 +531,7 @@ public class UCropActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     mGestureCropImageView.setTargetAspectRatio(
-                            ((AspectRatioTextView) ((ViewGroup) v).getChildAt(0)).getAspectRatio(v.isSelected()));
+                            ((AspectRatioTextView) ((ViewGroup) v).getChildAt(1)).getAspectRatio(false));
                     mGestureCropImageView.setImageToWrapCropBounds();
                     if (!v.isSelected()) {
                         for (ViewGroup cropAspectRatioView : mCropAspectRatioViews) {
@@ -555,11 +641,11 @@ public class UCropActivity extends AppCompatActivity {
 
     private void setInitialState() {
         if (mShowBottomControls) {
-            if (mWrapperStateAspectRatio.getVisibility() == View.VISIBLE) {
-                setWidgetState(R.id.state_aspect_ratio);
-            } else {
-                setWidgetState(R.id.state_scale);
-            }
+//            if (mWrapperStateAspectRatio.getVisibility() == View.VISIBLE) {
+            setWidgetState(R.id.state_aspect_ratio);
+//            } else {
+//                setWidgetState(R.id.state_scale);
+//            }
         } else {
             setAllowedGestures(0);
         }
@@ -641,6 +727,25 @@ public class UCropActivity extends AppCompatActivity {
 
     protected void setResultError(Throwable throwable) {
         setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == IMAGE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri outputUri = getIntent().getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
+                List<Item> items = Matisse.obtainItemResult(intent);
+                if (items!=null && items.size()>0) {
+                    try {
+                        mGestureCropImageView.setImageUri(items.get(0).getContentUri(), outputUri);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    mGestureCropImageView.setImageToWrapCropBounds();
+                }
+            }
+        }
     }
 
 }

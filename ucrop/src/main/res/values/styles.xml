@@ -2,8 +2,8 @@
 <resources>
 
     <style name="ucrop_ImageViewWidgetIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:duplicateParentState">true</item>
