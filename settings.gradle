@@ -1,3 +1,1 @@
 include ':ucrop', ':sample'
-include ':matisse'
-project(':matisse').projectDir = new File(rootProject.projectDir, '../Matisse/matisse')
