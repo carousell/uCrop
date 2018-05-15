@@ -38,5 +38,5 @@ android {
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
-    compileOnly project(':matisse')
+    compileOnly ('com.github.carousell:matisse:feature~crop-scale-image-SNAPSHOT')
 }
