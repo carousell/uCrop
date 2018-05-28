@@ -442,7 +442,14 @@ public class UCropActivity extends AppCompatActivity {
             }
         });
 
-
+        findViewById(R.id.image_view_carousell_delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_OK, new Intent()
+                        .putExtra(UCrop.EXTRA_OUTPUT_IS_DELETED, true));
+                finish();
+            }
+        });
 //
 //        ImageView rotateImageView = findViewById(R.id.image_view_carousell_rotate);
 //        ImageView replaceImageView = findViewById(R.id.image_view_carousell_replace);
