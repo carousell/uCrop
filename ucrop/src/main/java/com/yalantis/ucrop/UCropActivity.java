@@ -118,6 +118,9 @@ public class UCropActivity extends AppCompatActivity {
     private int mCompressQuality = DEFAULT_COMPRESS_QUALITY;
     private int[] mAllowedGestures = new int[]{SCALE, ROTATE, ALL};
 
+    private long customId;
+    private Uri originalUrl;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -729,6 +732,9 @@ public class UCropActivity extends AppCompatActivity {
                 .putExtra(UCrop.EXTRA_OUTPUT_IMAGE_HEIGHT, imageHeight)
                 .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_X, offsetX)
                 .putExtra(UCrop.EXTRA_OUTPUT_OFFSET_Y, offsetY)
+                .putExtra(UCrop.EXTRA_OUTPUT_CUSTOM_ID, customId)
+                .putExtra(UCrop.EXTRA_OUTPUT_ORIGINAL_URL, originalUrl)
+
         );
     }
 
@@ -744,8 +750,13 @@ public class UCropActivity extends AppCompatActivity {
                 Uri outputUri = getIntent().getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
                 List<Item> items = Matisse.obtainItemResult(intent);
                 if (items!=null && items.size()>0) {
+                    Item item = items.get(0);
                     try {
-                        mGestureCropImageView.setImageUri(items.get(0).getContentUri(), outputUri);
+                        mGestureCropImageView.setImageUri(item.getContentUri(), outputUri);
+
+                        customId = item.id;
+                        originalUrl = item.getContentUri();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

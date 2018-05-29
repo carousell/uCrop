@@ -52,6 +52,8 @@ public class UCrop {
     public static final String EXTRA_MAX_SIZE_Y = EXTRA_PREFIX + ".MaxSizeY";
 
     public static final String EXTRA_OUTPUT_IS_DELETED = EXTRA_PREFIX + ".OutputIsDeleted";
+    public static final String EXTRA_OUTPUT_CUSTOM_ID = EXTRA_PREFIX + ".OutputCustomId";
+    public static final String EXTRA_OUTPUT_ORIGINAL_URL = EXTRA_PREFIX + ".OutputOriginalUrl";
 
     private Intent mCropIntent;
     private Bundle mCropOptionsBundle;
@@ -216,6 +218,14 @@ public class UCrop {
 
     public static boolean getOutputIsDeleted(@NonNull Intent intent) {
         return intent.getBooleanExtra(EXTRA_OUTPUT_IS_DELETED, false);
+    }
+
+    public static long getOutputCustomId(@NonNull Intent intent) {
+        return intent.getLongExtra(EXTRA_OUTPUT_CUSTOM_ID, 0);
+    }
+
+    public static Uri getOutputOriginalUrl(@NonNull Intent intent) {
+        return intent.getParcelableExtra(EXTRA_OUTPUT_ORIGINAL_URL);
     }
 
     /**
